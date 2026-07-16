@@ -1,9 +1,11 @@
 const express = require("express");
-const authenticate = require("");
+// const authenticate = require("");
 const router = express.Router();
 
-const upload = require("../middlewares/upload.middleware");
-const validation = require("../middlewares/upload.validation");
+const asyncHandler = require("../utils/asyncHandler")
+const upload = require("../middlewares/multer.middleware");
+const validation = require("../middlewares/uploadvalidation.middleware");
+
 
 const uploadController = require("../controllers/upload.controller");
 
@@ -12,10 +14,10 @@ const uploadController = require("../controllers/upload.controller");
 //3)save to storage/temp
 //4)return metadata
 
-router.post('/upload',upload.single("file"), validation, uploadController.uploadFile);   
+router.post('/upload',upload.single("file"), asyncHandler(validation), asyncHandler(uploadController.uploadFile));   
 
-router.get('/download/:filename', uploadController.downloadFile);
+router.get('/download/:filename', asyncHandler(uploadController.downloadFile));
 
-router.get('/files', uploadController.listFiles);
+router.get('/files', asyncHandler(uploadController.listFiles));
 
 module.exports = router;
