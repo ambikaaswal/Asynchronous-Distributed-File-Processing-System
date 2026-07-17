@@ -1,6 +1,7 @@
 
 const AppError = require("../errors/AppError");
 const storageService = require("../services/storage.service");
+const logger = require("../utils/logger");
 
 // async function deleteFile(filepath){
 //     //find file and delete:
@@ -8,13 +9,15 @@ const storageService = require("../services/storage.service");
 // }
 
 const uploadValidation = async(req, res, next)=>{
+    
     //multer gives req.file and its properties
     if(!req.file){
-   
+        logger.error("No file received");
         return next(new AppError(400, "File not found"));
     }
     if(req.file.size === 0){
         //find file from storage and delete
+        logger.error("empty file received");
         await storageService.deleteTemp(req.file.path);
         return next( new AppError(400, "Empty file"));
     }
@@ -27,10 +30,10 @@ const uploadValidation = async(req, res, next)=>{
     const validExtension = allowedextensions.some(ext => req.file.originalname.toLowerCase().endsWith(ext));
 
     if(!validMime || !validExtension){
+        logger.error("Invalid file type received");
         await storageService.deleteTemp(req.file.path);
         return next(new AppError(400, " Invalid file type"));
     }
-
     next();
 
 };

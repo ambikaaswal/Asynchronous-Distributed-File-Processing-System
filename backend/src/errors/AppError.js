@@ -11,6 +11,7 @@
 class AppError extends Error{
 constructor(statuscode, message){
     super(message);
+    this.operational = true; //to know if its expected errors or programming bugs
     this.statusCode = statuscode;
     this.status = `${statuscode}`.startsWith("4")? "fail":"error";
 

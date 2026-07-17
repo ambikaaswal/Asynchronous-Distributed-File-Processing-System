@@ -24,7 +24,6 @@
 const multer = require("multer");
 const path = require("path");
 
-
 //destination for multer:
 const storage = multer.diskStorage({
     destination: (req, file, cb)=>{
