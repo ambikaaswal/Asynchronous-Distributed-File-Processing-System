@@ -11,15 +11,45 @@
 const storageService = require("../services/storage.service");
 
 const uploadFile = async(req,res,next)=>{
-    
-        const metadata = await storageService.finalize(req.file.path, req.file.filename);
-        return res.status(201).json({
-            success: true,
-            data: {
-                originalName: req.file.originalname,
+        const files = req.files;
+        const failedfiles = req.failedFiles; 
+        
+        let uploaded = [];//array because [array].push exists not {object}.push
+        let failed = [];
+        for(const file of files){
+            const metadata = await storageService.finalize(file.path, file.filename);
+            const currentFile = {
+                originalName: file.originalname,
                 filename: metadata.filename
             }
-        });
+            uploaded.push(currentFile);
+            
+        }
+        for(const file of failedfiles){
+            const failedFile = {
+                originalName: file.originalname,
+                error : file.error
+            }
+            failed.push(failedFile);
+        }
+        
+        return res.status(201).json({
+            success: true,
+            data:{
+            uploaded,
+            failed
+        }
+        })
+
+        //during multer:
+        // const metadata = await storageService.finalize(req.file.path, req.file.filename);
+        // return res.status(201).json({
+        //     success: true,
+        //     data: {
+        //         originalName: req.file.originalname,
+        //         filename: metadata.filename
+        //     }
+        // });
            
 };
 

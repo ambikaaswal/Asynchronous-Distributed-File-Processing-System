@@ -1,5 +1,5 @@
 const express = require("express");
-const logger = require("./middlewares/multer.middleware");
+// const logger = require("./middlewares/multer.middleware");
 const uploadRoutes = require("./routes/upload.route")
 const errorHandler = require("./middlewares/err.middleware");
 
